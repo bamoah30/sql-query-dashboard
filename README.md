@@ -52,6 +52,7 @@ sql-query-dashboard/
 │
 ├── requirements.txt          # Python dependencies
 ├── README.md                 # Main project description (this file)
+├── LICENSE
 └── .gitignore                # Git ignore rules
 ```
 
