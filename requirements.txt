@@ -1,0 +1,13 @@
+# Core dependencies
+python-dotenv==1.0.0       # For environment variable management
+
+# Database
+pandas==2.2.2              # Handle query results as DataFrames
+sqlalchemy==2.0.30          # Optional: structured database connection layer
+
+# Visualization
+matplotlib==3.9.0          # Core plotting library
+seaborn==0.13.2            # Optional: polished statistical visualizations
+
+# Interface
+streamlit==1.39.0          # Interactive web-based dashboard
