@@ -25,11 +25,6 @@ The **SQL Query Dashboard** is an interactive tool for database exploration and 
    - `streamlit` – for building the interactive dashboard.
    - `python-dotenv` – for environment variable management.
 
-3. **Repository Initialization**
-   - Initialized Git locally (`git init`).
-   - Created a new repository on GitHub and connected the local folder.
-   - Cloned the repository for active development.
-
 ---
 
 ## Minimum Viable Product (MVP)

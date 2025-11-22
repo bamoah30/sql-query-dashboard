@@ -1,4 +1,4 @@
-# 📊 SQL Query Dashboard
+# SQL Query Dashboard
 
 The **SQL Query Dashboard** is an interactive tool for exploring databases and visualizing query results. Built with **Python, SQLite, and Matplotlib**, it allows users to run SQL queries, view results in tabular form, and generate customizable charts.
 
@@ -6,7 +6,7 @@ This project demonstrates practical skills in **database management, data visual
 
 ---
 
-## 🚀 Features
+## Features
 
 - Execute SQL queries against a local SQLite database.
 - Display query results in a clean tabular format.
@@ -17,7 +17,7 @@ This project demonstrates practical skills in **database management, data visual
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Language**: Python
 - **Database**: SQLite
@@ -26,12 +26,13 @@ This project demonstrates practical skills in **database management, data visual
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 sql-query-dashboard/
 │
 ├── data/                     # Sample databases and datasets
+    ├──create_sample_db.py    #For populating the sample.db
 │   └── sample.db
 │
 ├── src/                      # Source code
@@ -58,7 +59,7 @@ sql-query-dashboard/
 
 ---
 
-## 📖 Getting Started
+## Getting Started
 
 ### 1. Clone the repository
 
@@ -91,7 +92,7 @@ python src/main.py
 
 ---
 
-## 📌 Roadmap
+## Roadmap
 
 - **Phase 1**: Foundations & Setup
 - **Phase 2**: Core Query Execution
@@ -101,6 +102,6 @@ python src/main.py
 
 ---
 
-## 📜 License
+## License
 
 This project is open‑source and available under the MIT License.
