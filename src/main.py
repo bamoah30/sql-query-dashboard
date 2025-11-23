@@ -1,27 +1,32 @@
 # main.py
-# SQL Query Dashboard – Phase 1 (Foundations & Setup)
+# SQL Query Dashboard – Phase 2 (Refactored to use query_runner.py)
 
 import streamlit as st
+from query_runner import init_db, run_query
 
 def main():
-    # Title and description
-    st.title("SQL Query Dashboard")
-    st.write("Welcome to Phase 1 – Foundations & Setup")
-    st.write("This dashboard will allow you to run SQL queries and visualize results in later phases.")
+    st.title("SQL Query Dashboard – Phase 2")
+    st.write("Run SQL queries against sample.db and view results.")
 
-    # Placeholder sections
-    st.header("Database Connection")
-    st.info("Database connection will be implemented in Phase 2.")
+    # Initialize DB if missing
+    init_db()
 
-    st.header("Query Execution")
-    st.info("SQL query runner will be added in Phase 2.")
+    # Query input
+    query = st.text_area("Enter your SQL query:", "SELECT * FROM Students;")
 
-    st.header("Visualization")
-    st.info("Charts and plots will be introduced in Phase 3.")
+    if st.button("Run Query"):
+        rows, cols, error = run_query(query)
+        if error:
+            st.error(f"Error: {error}")
+        else:
+            if cols:
+                st.dataframe(rows, use_container_width=True)
+                st.caption(f"Columns: {', '.join(cols)}")
+            else:
+                st.success("Query executed successfully (no results to display).")
 
-    # Footer
     st.write("---")
-    st.caption("SQL Query Dashboard | Phase 1 Setup Complete")
+    st.caption("SQL Query Dashboard | Phase 2 – Query Execution")
 
 if __name__ == "__main__":
     main()
