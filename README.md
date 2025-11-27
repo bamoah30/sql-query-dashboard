@@ -12,7 +12,6 @@ This project demonstrates practical skills in **database management, data visual
 - Display query results in a clean tabular format.
 - Generate visualizations (bar, line, scatter, etc.) using Matplotlib.
 - Interactive dashboard interface for switching between raw data and charts.
-- Export charts for reporting.
 - Local deployment with full documentation.
 
 ---
@@ -22,7 +21,7 @@ This project demonstrates practical skills in **database management, data visual
 - **Language**: Python
 - **Database**: SQLite
 - **Visualization**: Matplotlib
-- **Interface**: Streamlit or Tkinter (depending on phase)
+- **Interface**: Streamlit
 
 ---
 
@@ -32,24 +31,14 @@ This project demonstrates practical skills in **database management, data visual
 sql-query-dashboard/
 │
 ├── data/                     # Sample databases and datasets
-    ├──create_sample_db.py    #For populating the sample.db
-│   └── sample.db
+│    ├──create_sample_db.py    #For populating the sample.db
+│    └── sample.db
 │
 ├── src/                      # Source code
 │   ├── main.py               # Entry point for the dashboard
 │   ├── query_runner.py       # SQL query execution logic
 │   ├── visualizer.py         # Matplotlib visualization functions
 │   └── interface.py          # Interactive UI (Streamlit/Tkinter)
-│
-├── docs/                     # Documentation for each phase
-│   ├── Phase1_README.md
-│   ├── Phase2_README.md
-│   ├── Phase3_README.md
-│   ├── Phase4_README.md
-│   └── Phase5_README.md
-│
-├── tests/                    # Unit tests
-│   └── test_query_runner.py
 │
 ├── requirements.txt          # Python dependencies
 ├── README.md                 # Main project description (this file)
@@ -64,7 +53,7 @@ sql-query-dashboard/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YourUsername/sql-query-dashboard.git
+git clone https://github.com/bamoah30/sql-query-dashboard.git
 cd sql-query-dashboard
 ```
 
@@ -87,7 +76,7 @@ pip install -r requirements.txt
 ### 4. Run the dashboard
 
 ```bash
-python src/main.py
+streamlit run src/main.py
 ```
 
 ---
