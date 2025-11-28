@@ -1,50 +1,61 @@
 # interface.py
-# Interactive query builders for SQL Query Dashboard – Phase 4
+# Dynamic interactive query builders for SQL Query Dashboard – Phase 4
 
 import streamlit as st
+from query_runner import get_all_tables, get_table_columns
 
-def student_filter_form():
+def dynamic_query_builder():
     """
-    Form to filter students by minimum grade.
+    Build dynamic query forms based on whatever tables exist in the current DB.
     Returns a SQL query string if submitted, else None.
     """
-    with st.form("student_filter"):
-        st.subheader("Filter Students by Grade")
-        min_grade = st.number_input("Minimum Grade", min_value=0, max_value=100, value=50)
-        submitted = st.form_submit_button("Apply Filter")
-        if submitted:
-            return f"SELECT * FROM Students WHERE grade >= {min_grade};"
+    tables = get_all_tables()
+    if not tables:
+        st.info("No tables found in the current database.")
+        return None
+
+    st.subheader("Dynamic Query Builder")
+
+    # Pick a table
+    selected_table = st.selectbox("Choose a table:", tables)
+
+    # Get columns for that table
+    if selected_table is None:
+        st.warning("Please select a table.")
+        return None
+    cols = get_table_columns(selected_table)
+    if not cols:
+        st.warning(f"No columns found for {selected_table}.")
+        return None
+
+    # Pick a column to filter
+    selected_col = st.selectbox("Choose a column to filter:", cols)
+
+    # Enter a filter value
+    filter_value = st.text_input(f"Enter value for {selected_col}:")
+
+    submitted = st.button("Run Dynamic Query")
+    if submitted and filter_value:
+        # Build query dynamically
+        return f"SELECT * FROM {selected_table} WHERE {selected_col} = '{filter_value}';"
+
     return None
 
 
-def class_filter_form():
+def quick_table_viewer():
     """
-    Dropdown to select a class and filter students.
-    Returns a SQL query string if selected, else None.
-    """
-    st.subheader("Filter Students by Class")
-    class_options = {
-        1: "Database Systems",
-        2: "Robotics",
-        3: "AI Fundamentals",
-        4: "Control Systems"
-    }
-    selected_class = st.selectbox("Choose a class:", options=list(class_options.keys()), format_func=lambda x: class_options[x])
-    if st.button("Show Students in Class"):
-        return f"SELECT * FROM Students WHERE class_id = {selected_class};"
-    return None
-
-
-def attendance_filter_form():
-    """
-    Date range filter for attendance records.
+    Quick explorer: lets user pick a table and view all rows without filters.
     Returns a SQL query string if submitted, else None.
     """
-    with st.form("attendance_filter"):
-        st.subheader("Filter Attendance by Date Range")
-        start_date = st.date_input("Start Date")
-        end_date = st.date_input("End Date")
-        submitted = st.form_submit_button("Apply Date Filter")
-        if submitted:
-            return f"SELECT * FROM Attendance WHERE date BETWEEN '{start_date}' AND '{end_date}';"
+    tables = get_all_tables()
+    if not tables:
+        st.info("No tables found in the current database.")
+        return None
+
+    st.subheader("Quick Table Viewer")
+
+    selected_table = st.selectbox("Choose a table to view:", tables, key="quick_view")
+    if st.button("Show Table Contents"):
+        return f"SELECT * FROM {selected_table};"
+
     return None
