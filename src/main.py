@@ -1,16 +1,30 @@
 # main.py
-# SQL Query Dashboard – Phase 4 (UI + Interactive Query Builders)
+# SQL Query Dashboard – Phase 4 (UI + Upload Feature + Dynamic Query Builders + Database Explorer)
 
 import streamlit as st
-from query_runner import init_db, run_query
+from query_runner import init_db, run_query, get_all_tables, dump_table, set_db_path
 from visualizer import to_dataframe, plot_bar, plot_line, plot_pie
-from interface import student_filter_form, class_filter_form, attendance_filter_form
+from interface import dynamic_query_builder, quick_table_viewer
+import tempfile
 
 def main():
-    st.title("SQL Query Dashboard ")
-    st.write("Run SQL queries against sample.db using raw SQL or interactive query builders.")
+    st.title("SQL Query Dashboard – Phase 4")
+    st.write("Run SQL queries against sample.db or upload your own SQLite database.")
 
-    # Initialize DB if missing
+    # -----------------------------
+    # Section 0: Upload Database
+    # -----------------------------
+    st.subheader("Upload Your Own Database")
+    uploaded_file = st.file_uploader("Upload a SQLite .db file", type=["db", "sqlite"])
+    if uploaded_file is not None:
+        # Save to a temporary file
+        temp_db = tempfile.NamedTemporaryFile(delete=False, suffix=".db")
+        temp_db.write(uploaded_file.read())
+        temp_db.close()
+        set_db_path(temp_db.name)
+        st.success(f"Database switched to: {temp_db.name}")
+
+    # Initialize DB if missing (default or uploaded)
     init_db()
 
     # -----------------------------
@@ -42,48 +56,52 @@ def main():
                 st.success("Query executed successfully (no results to display).")
 
     # -----------------------------
-    # Section 2: Interactive Query Builders
+    # Section 2: Dynamic Query Builders
     # -----------------------------
-    st.subheader("🔹 Interactive Query Builders")
+    st.subheader(" Dynamic Query Builders (Works with Uploaded DBs)")
 
-    # Student filter form (e.g., grade threshold)
-    student_query = student_filter_form()
-    if student_query:
-        st.write("Generated SQL:", student_query)
-        rows, cols, error = run_query(student_query)
-        if error:
-            st.error(f"Error: {error}")
-        else:
+    # Dynamic filter builder
+    dynamic_query = dynamic_query_builder()
+    if dynamic_query:
+        st.write("Generated SQL:", dynamic_query)
+        rows, cols, error = run_query(dynamic_query)
+        if not error:
             df = to_dataframe(rows, cols)
             if df is not None:
                 st.dataframe(df, use_container_width=True)
 
-    # Class filter form (dropdown for class selection)
-    class_query = class_filter_form()
-    if class_query:
-        st.write("Generated SQL:", class_query)
-        rows, cols, error = run_query(class_query)
-        if error:
-            st.error(f"Error: {error}")
-        else:
+    # Quick table viewer
+    quick_query = quick_table_viewer()
+    if quick_query:
+        st.write("Generated SQL:", quick_query)
+        rows, cols, error = run_query(quick_query)
+        if not error:
             df = to_dataframe(rows, cols)
             if df is not None:
                 st.dataframe(df, use_container_width=True)
 
-    # Attendance filter form (date range)
-    attendance_query = attendance_filter_form()
-    if attendance_query:
-        st.write("Generated SQL:", attendance_query)
-        rows, cols, error = run_query(attendance_query)
-        if error:
-            st.error(f"Error: {error}")
-        else:
-            df = to_dataframe(rows, cols)
-            if df is not None:
-                st.dataframe(df, use_container_width=True)
+    # -----------------------------
+    # Section 3: Explore Entire Database
+    # -----------------------------
+    st.subheader(" Explore Entire Database")
+    if st.button("Show All Tables"):
+        tables = get_all_tables()
+        st.write("Tables found:", tables)
+
+        for table in tables:
+            st.write(f"### Table: {table}")
+            rows, cols, error = dump_table(table)
+            if error:
+                st.error(f"Error reading {table}: {error}")
+            else:
+                if rows:
+                    df = to_dataframe(rows, cols)
+                    st.dataframe(df, use_container_width=True)
+                else:
+                    st.info(f"{table} is empty.")
 
     st.write("---")
-    st.caption("SQL Query Dashboard |  Raw SQL + Interactive Query Builders")
+    st.caption("SQL Query Dashboard | Dynamic Query Builders + Database Explorer + Upload Feature")
 
 if __name__ == "__main__":
     main()
