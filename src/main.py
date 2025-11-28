@@ -8,7 +8,7 @@ from interface import dynamic_query_builder, quick_table_viewer
 import tempfile
 
 def main():
-    st.title("SQL Query Dashboard – Phase 4")
+    st.title("SQL Query Dashboard ")
     st.write("Run SQL queries against sample.db or upload your own SQLite database.")
 
     # -----------------------------
