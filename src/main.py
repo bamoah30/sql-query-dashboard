@@ -30,7 +30,7 @@ def main():
     # -----------------------------
     # Section 1: Raw SQL Input
     # -----------------------------
-    st.subheader("🔹 Raw SQL Query")
+    st.subheader(" Raw SQL Query")
     query = st.text_area("Enter your SQL query:", "SELECT * FROM Students;")
 
     chart_type = st.selectbox(
