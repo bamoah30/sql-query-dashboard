@@ -4,14 +4,22 @@
 import sqlite3
 import os
 
-DB_PATH = "data/sample.db"
+DB_PATH = "data/sample.db"  # default database
 SQL_INIT_FILE = "init_sample.sql"
+
+def set_db_path(path: str):
+    """
+    Update the global DB_PATH to point to a new database file.
+    """
+    global DB_PATH
+    DB_PATH = path
 
 def init_db():
     """
     Initialize the database if it doesn't exist.
-    If sample.db is missing, create it and populate using init_sample.sql (if available).
+    
     """
+
     if not os.path.exists(DB_PATH):
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
@@ -23,11 +31,8 @@ def init_db():
 
 def run_query(query: str):
     """
-    Execute a SQL query against sample.db.
-    Returns:
-        - rows: list of tuples with query results
-        - cols: list of column names (if applicable)
-        - error: error message string if query fails
+    Execute a SQL query against the current DB_PATH.
+    Returns rows, column names, and error message (if any).
     """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -40,3 +45,46 @@ def run_query(query: str):
     except Exception as e:
         conn.close()
         return None, None, str(e)
+
+def get_all_tables():
+    """
+    Return a list of all table names in the database.
+    """
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    tables = [row[0] for row in cursor.fetchall()]
+    conn.close()
+    return tables
+
+def dump_table(table_name: str):
+    """
+    Return all rows and columns from a given table.
+    """
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    try:
+        cursor.execute(f"SELECT * FROM {table_name};")
+        rows = cursor.fetchall()
+        cols = [description[0] for description in cursor.description]
+        conn.close()
+        return rows, cols, None
+    except Exception as e:
+        conn.close()
+        return None, None, str(e)
+
+def get_table_columns(table_name: str):
+    """
+    Return a list of column names for a given table.
+    Useful for dynamic query builders.
+    """
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    try:
+        cursor.execute(f"PRAGMA table_info({table_name});")
+        cols = [row[1] for row in cursor.fetchall()]
+        conn.close()
+        return cols
+    except Exception:
+        conn.close()
+        return []
